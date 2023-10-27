@@ -12,12 +12,13 @@ services:
     image: envoyproxy/envoy-dev:b8f85f43b90d69b9e7303d68d1ea585f723759d0
     volumes:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
+    depends_on:
+      - api
   api:
     image: hops/api:latest
     links:
       - db
     depends_on:
-      - envoy
       - db
     environment:
       DB_USERNAME: "${HOPS_DB_USERNAME}"
@@ -46,5 +47,5 @@ services:
       - envoy
       - oauth
     depends_on:
-      - api
+      - envoy
       - oauth
