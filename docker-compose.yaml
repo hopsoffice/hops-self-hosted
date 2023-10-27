@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   db:
-    image: postgres:latest
+    image: postgres:16.0
     environment:
       POSTGRES_USER: "${HOPS_DB_USERNAME}"
       POSTGRES_PASSWORD: "${HOPS_DB_PASSWORD}"
@@ -36,7 +36,7 @@ services:
       DB_HOST: "db:5432"
       DB_NAME: "${HOPS_DB_NAME}"
   frontend:
-    image: hops/frontend
+    image: hops/frontend:latest
     environment:
       API_URL: "http://${HOPS_DEPLOY_DOMAIN}:9393/"
       OAUTH_URL: "http://${HOPS_DEPLOY_DOMAIN}:2608/"
