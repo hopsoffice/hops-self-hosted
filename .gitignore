@@ -1,3 +1,3 @@
 .env
 [._]*.sw[a-p]
-
+pgdata

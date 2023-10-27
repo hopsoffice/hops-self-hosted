@@ -6,6 +6,8 @@ services:
       POSTGRES_USER: "${HOPS_DB_USERNAME}"
       POSTGRES_PASSWORD: "${HOPS_DB_PASSWORD}"
       POSTGRES_DB: "${HOPS_DB_NAME}"
+    volumes:
+      - ${HOPS_DB_DATA}:/var/lib/postgresql/data
   envoy:
     image: envoyproxy/envoy-dev:b8f85f43b90d69b9e7303d68d1ea585f723759d0
     volumes:
