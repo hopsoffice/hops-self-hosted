@@ -12,6 +12,8 @@ services:
     image: envoyproxy/envoy-dev:b8f85f43b90d69b9e7303d68d1ea585f723759d0
     volumes:
       - ./envoy.yaml:/etc/envoy/envoy.yaml
+    links:
+      - api
     depends_on:
       - api
   api:
