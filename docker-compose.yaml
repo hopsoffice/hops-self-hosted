@@ -45,9 +45,6 @@ services:
       OAUTH_URL: "http://${HOPS_DEPLOY_DOMAIN}:2608/"
     ports:
       - 3000:3000
-    links:
-      - envoy
-      - oauth
     depends_on:
       - envoy
       - oauth
