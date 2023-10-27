@@ -1,0 +1,50 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16.0
+    environment:
+      POSTGRES_USER: "${HOPS_DB_USERNAME}"
+      POSTGRES_PASSWORD: "${HOPS_DB_PASSWORD}"
+      POSTGRES_DB: "${HOPS_DB_NAME}"
+    volumes:
+      - ${HOPS_DB_DATA}:/var/lib/postgresql/data
+  envoy:
+    image: envoyproxy/envoy-dev:b8f85f43b90d69b9e7303d68d1ea585f723759d0
+    volumes:
+      - ./envoy.yaml:/etc/envoy/envoy.yaml
+    links:
+      - api
+    depends_on:
+      - api
+  api:
+    image: hops/api:latest
+    links:
+      - db
+    depends_on:
+      - db
+    environment:
+      DB_USERNAME: "${HOPS_DB_USERNAME}"
+      DB_PASSWORD: "${HOPS_DB_PASSWORD}"
+      DB_HOST: "db:5432"
+      DB_NAME: "${HOPS_DB_NAME}"
+  oauth:
+    image: hops/app-oauth:latest
+    links:
+      - db
+    depends_on:
+      - db
+    environment:
+      DB_USERNAME: "${HOPS_DB_USERNAME}"
+      DB_PASSWORD: "${HOPS_DB_PASSWORD}"
+      DB_HOST: "db:5432"
+      DB_NAME: "${HOPS_DB_NAME}"
+  frontend:
+    image: hops/frontend:latest
+    environment:
+      API_URL: "http://${HOPS_DEPLOY_DOMAIN}:9393/"
+      OAUTH_URL: "http://${HOPS_DEPLOY_DOMAIN}:2608/"
+    ports:
+      - 3000:3000
+    depends_on:
+      - envoy
+      - oauth
