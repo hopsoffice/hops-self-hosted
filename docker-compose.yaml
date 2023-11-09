@@ -16,8 +16,10 @@ services:
       - api
     depends_on:
       - api
+    ports:
+      - 3001:9393
   api:
-    image: hops/api:latest
+    image: registry.hopsoffice.com/hops-api:latest
     links:
       - db
     depends_on:
@@ -27,22 +29,27 @@ services:
       DB_PASSWORD: "${HOPS_DB_PASSWORD}"
       DB_HOST: "db:5432"
       DB_NAME: "${HOPS_DB_NAME}"
+      HOPS_GOOGLE_APP_CLIENT_ID: "${GOOGLE_CLIENT_ID}"
+      HOPS_GOOGLE_APP_CLIENT_SECRET: "${GOOGLE_CLIENT_SECRET}"
+      HOPS_LICENSE_ID: "${HOPS_LICENSE_ID}"
+      HOPS_ON_PREMISES_INITIAL_USER_EMAIL: "${HOPS_INITIAL_USER_EMAIL}"
+      HOPS_ON_PREMISES_USER_PASSWORD_DEFAULT: "${HOPS_DEFAULT_USER_PASSWORD}"
+      JWT_SECRET: "${HOPS_SECRET_KEY}"
   oauth:
-    image: hops/app-oauth:latest
-    links:
-      - db
-    depends_on:
-      - db
+    image: registry.hopsoffice.com/hops-oauth:latest
     environment:
-      DB_USERNAME: "${HOPS_DB_USERNAME}"
-      DB_PASSWORD: "${HOPS_DB_PASSWORD}"
-      DB_HOST: "db:5432"
-      DB_NAME: "${HOPS_DB_NAME}"
+      SERVER_FORWARD_HEADERS_STRATEGY: "FRAMEWORK"
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_ID: "${GOOGLE_CLIENT_ID}"
+      SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT_SECRET: "${GOOGLE_CLIENT_SECRET}"
+      SERVER_TOMCAT_INTERNAL_PROXIES: ".*"
+      SERVER_USE_FORWARD_HEADERS: true
+    ports:
+      - 3002:2608
   frontend:
-    image: hops/frontend:latest
+    image: registry.hopsoffice.com/hops-frontend:latest
     environment:
-      API_URL: "http://${HOPS_DEPLOY_DOMAIN}:9393/"
-      OAUTH_URL: "http://${HOPS_DEPLOY_DOMAIN}:2608/"
+      API_URL: "http://${HOPS_DEPLOY_DOMAIN}:3001"
+      OAUTH_URL: "http://${HOPS_DEPLOY_DOMAIN}:3002"
     ports:
       - 3000:3000
     depends_on:
