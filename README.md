@@ -5,6 +5,16 @@ Docker Compose 환경 설정을 활용하면 5분 안에 Hops를 바로 실행�
 
 ![](https://hopsoffice.github.io/misc/public/hops-hero-animated-no-play.png)
 
+## 한 줄 설치
+
+```console
+$ bash <(curl -fsSL https://github.com/hopsoffice/hops-self-hosted/releases/download/0.1/download.sh)
+$ cd hops_self_hosted_0.1
+$ ./install.sh
+$ docker login registry.hopsoffice.com
+$ docker compose up
+```
+
 ## 준비사항
 
 ### Docker, Docker Compose
