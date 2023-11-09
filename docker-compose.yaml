@@ -17,7 +17,7 @@ services:
     depends_on:
       - api
   api:
-    image: hops/api:latest
+    image: registry.hopsoffice.com/hops-api:latest
     links:
       - db
     depends_on:
@@ -28,7 +28,7 @@ services:
       DB_HOST: "db:5432"
       DB_NAME: "${HOPS_DB_NAME}"
   oauth:
-    image: hops/app-oauth:latest
+    image: registry.hopsoffice.com/hops-oauth:latest
     links:
       - db
     depends_on:
@@ -39,7 +39,7 @@ services:
       DB_HOST: "db:5432"
       DB_NAME: "${HOPS_DB_NAME}"
   frontend:
-    image: hops/frontend:latest
+    image: registry.hopsoffice.com/hops-frontend:latest
     environment:
       API_URL: "http://${HOPS_DEPLOY_DOMAIN}:9393/"
       OAUTH_URL: "http://${HOPS_DEPLOY_DOMAIN}:2608/"
