@@ -38,6 +38,7 @@ echo ':: Secret Key Configuration'
 echo
 echo 'Please provide a secret key to secure the login and authentication process.'
 echo 'Secret key must be base64-encoded value of string of 32 bytes in size.'
+echo "If you don't know how to make secret key, please read README.md."
 echo
 read -sp 'Secret Key: ' secretKey
 echo
