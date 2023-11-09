@@ -16,6 +16,8 @@ services:
       - api
     depends_on:
       - api
+    ports:
+      - 3001:9393
   api:
     image: registry.hopsoffice.com/hops-api:latest
     links:
@@ -29,11 +31,13 @@ services:
       DB_NAME: "${HOPS_DB_NAME}"
   oauth:
     image: registry.hopsoffice.com/hops-oauth:latest
+    ports:
+      - 3002:2608
   frontend:
     image: registry.hopsoffice.com/hops-frontend:latest
     environment:
-      API_URL: "http://${HOPS_DEPLOY_DOMAIN}:9393/"
-      OAUTH_URL: "http://${HOPS_DEPLOY_DOMAIN}:2608/"
+      API_URL: "http://${HOPS_DEPLOY_DOMAIN}:3001"
+      OAUTH_URL: "http://${HOPS_DEPLOY_DOMAIN}:3002"
     ports:
       - 3000:3000
     depends_on:
