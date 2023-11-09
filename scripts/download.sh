@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 tmp=$(mktemp -d)
-version="0.1"
+version="0.2"
 curl -L "https://github.com/hopsoffice/hops-self-hosted/releases/download/$version/releases$version.tar.gz" > "$tmp/releases$version.tar.gz"
 tar xvfz "$tmp/releases$version.tar.gz"
 rm -rf $tmp
