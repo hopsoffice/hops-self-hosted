@@ -29,15 +29,6 @@ services:
       DB_NAME: "${HOPS_DB_NAME}"
   oauth:
     image: registry.hopsoffice.com/hops-oauth:latest
-    links:
-      - db
-    depends_on:
-      - db
-    environment:
-      DB_USERNAME: "${HOPS_DB_USERNAME}"
-      DB_PASSWORD: "${HOPS_DB_PASSWORD}"
-      DB_HOST: "db:5432"
-      DB_NAME: "${HOPS_DB_NAME}"
   frontend:
     image: registry.hopsoffice.com/hops-frontend:latest
     environment:
