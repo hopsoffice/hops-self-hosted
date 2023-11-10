@@ -23,7 +23,11 @@ Docker Compose 서비스에서 PostgreSQL 데이터베이스 컨테이너가 생
 
 ## Hops 데이터 소스
 
-Google Sheets 연동을 위한 정보는 [Google Cloud Platform Console](https://console.cloud.google.com/)에서 만드실 수 있습니다.
+Google Sheets 연동을 위한 정보는 [Google Cloud Console]에서 만드실 수 있습니다.
+자세한 내용은 [Google Cloud 프로젝트 연동] 문서를 참조하세요.
+
+[Google Cloud Console]: https://console.cloud.google.com/
+[Google Cloud 프로젝트 연동]: ./google-cloud.md
 
 | 환경 변수 이름             | 설명                                                  | 필수 여부 | 기본값 |
 |----------------------|-----------------------------------------------------|-------|-----|
@@ -44,10 +48,12 @@ Google Sheets 연동을 위한 정보는 [Google Cloud Platform Console](https:/
 
 ## 라이센스
 
-Hops를 이용하기 위해 필요한 라이센스 정보입니다.  발급을 위해서 [contact@hopsoffice.com](mailto:contact@hopsoffice.com)으로
-메일을 주시거나 [이 링크](https://sendtime.app/ko/reservation?i=WeopdU)에서
-상담을 신청해주세요.  기본값으로 입력되는 라이센스 ID는 유효하지 않은
-라이센스입니다.
+Hops를 이용하기 위해 필요한 라이센스 정보입니다.  발급을 위해서
+[contact@hopsoffice.com]으로 메일을 주시거나 [Hops 상담 신청 페이지]에서 상담을
+신청해주세요.  기본값으로 입력되는 라이센스 ID는 유효하지 않은 라이센스입니다.
+
+[contact@hopsoffice.com]: mailto:contact@hopsoffice.com
+[Hops 상담 신청 페이지]: https://sendtime.app/ko/reservation?i=Weopd
 
 | 환경 변수 이름        | 설명           | 필수 여부 | 기본값                                  |
 |-----------------|--------------|-------|--------------------------------------|
