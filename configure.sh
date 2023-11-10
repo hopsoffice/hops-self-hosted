@@ -88,6 +88,6 @@ echo
 echo 'Configuration finished! Saving configurations...'
 
 ./scripts/build_env.sh \
-    "$dbName" "$dbUsername" "$dbPassword" "$initialuserEmail" "$defaultUserPassword" "$secretKey" "$deployDomain" \
+    "$dbName" "$dbUsername" "$dbPassword" "$initialUserEmail" "$defaultUserPassword" "$secretKey" "$deployDomain" \
     "$googleClientId" "$googleClientSecret" "$licenseId" "" \
     > .env
