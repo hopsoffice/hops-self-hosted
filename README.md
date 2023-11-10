@@ -7,12 +7,11 @@ Docker Compose 환경 설정을 활용하면 5분 안에 Hops를 바로 실행�
 
 ## 한 줄 설치
 
+문서를 읽어볼 시간이 없으시다면 아래 명령어로 누구보다 빠르게 홉스를
+실행해보세요.
+
 ```console
 $ bash <(curl -fsSL https://github.com/hopsoffice/hops-self-hosted/releases/download/0.2/download.sh)
-$ cd hops_self_hosted_0.2
-$ ./configure.sh
-$ docker login registry.hopsoffice.com
-$ docker compose up
 ```
 
 ## 준비사항
@@ -36,7 +35,7 @@ Hops를 설치하여 사용하려면 홉스 Docker 이미지 저장소에 접근
 값이며, 다음과 같은 명령어로 간단히 생성할 수 있습니다.
 
 ```console
-$ openssl rand -hex 16 | base64
+$ hexdump -vn16 -e '4/4 "%08X"' /dev/urandom | base64
 ```
 
 ## 설치
@@ -75,4 +74,4 @@ $ docker compose up
 
 ## 환경 변수
 
-환경 변수에 대한 설명은 [환경 변수 문서][./docs/env.md]를 참고해주세요.
+환경 변수에 대한 설명은 [환경 변수 문서](./docs/env.md)를 참고해주세요.
