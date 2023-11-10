@@ -87,16 +87,7 @@ echo
 
 echo 'Configuration finished! Saving configurations...'
 
-cat <<EOF > .env
-HOPS_DB_NAME=${dbName:-hops}
-HOPS_DB_USERNAME=${dbUsername:-hops}
-HOPS_DB_PASSWORD=${dbPassword:-secret}
-HOPS_INITIAL_USER_EMAIL=${initialUserEmail}
-HOPS_DEFAULT_USER_PASSWORD=${defaultUserPassword}
-HOPS_SECRET_KEY=${secretKey}
-HOPS_DEPLOY_DOMAIN=${deployDomain:-localhost}
-GOOGLE_CLIENT_ID=${googleClientId:-}
-GOOGLE_CLIENT_SECRET=${googleClientSecret:-}
-HOPS_LICENSE_ID=${licenseId}
-HOPS_DB_DATA="./pgdata"
-EOF
+./scripts/build_env.sh \
+    "$dbName" "$dbUsername" "$dbPassword" "$initialuserEmail" "$defaultUserPassword" "$secretKey" "$deployDomain" \
+    "$googleClientId" "$googleClientSecret" "$licenseId" "" \
+    > .env
