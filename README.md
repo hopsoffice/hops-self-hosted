@@ -3,7 +3,7 @@
 원하는 환경에 Hops를 설치하여 사용해보세요. 이 저장소에 준비된 스크립트와
 Docker Compose 환경 설정을 활용하면 5분 안에 Hops를 바로 실행해볼 수 있습니다.
 
-![](https://hopsoffice.github.io/misc/public/hops-hero-animated-no-play.png)
+![hops hero image](https://hopsoffice.github.io/misc/public/hops-hero-animated-no-play.png)
 
 ## 한 줄 설치
 
