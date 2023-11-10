@@ -1,6 +1,6 @@
 #!/bin/bash
 function buildEnv { 
-    defaultSecretKey="$(hexdump -vn16 -e'4/4 "%08X" 1 "\n"' /dev/urandom | base64)"
+    defaultSecretKey="$(hexdump -vn16 -e '4/4 "%08X"' /dev/urandom | base64)"
     cat <<EOF
 HOPS_DB_NAME="${1:-hops}"
 HOPS_DB_USERNAME="${2:-hops}"
