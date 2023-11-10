@@ -10,7 +10,7 @@ Docker Compose 환경 설정을 활용하면 5분 안에 Hops를 바로 실행�
 ```console
 $ bash <(curl -fsSL https://github.com/hopsoffice/hops-self-hosted/releases/download/0.2/download.sh)
 $ cd hops_self_hosted_0.2
-$ ./install.sh
+$ ./configure.sh
 $ docker login registry.hopsoffice.com
 $ docker compose up
 ```
@@ -41,10 +41,10 @@ $ openssl rand -hex 16 | base64
 
 ## 설치
 
-저장소를 다운로드받은 후 `install.sh`를 실행하고 설명대로 진행합니다.
+저장소를 다운로드받은 후 `configure.sh`를 실행하고 설명대로 진행합니다.
 
 ```console
-$ ./install.sh
+$ ./configure.sh
 :: Database Configurations
 
 A PostgreSQL database container will be created in docker compose service.
@@ -66,6 +66,7 @@ Configuration finished! Saving configurations...
 설치가 완료된 상태에서 Docker Compose 서비스를 실행하면 Hops가 실행됩니다.
 
 ```console
+$ docker login registry.hopsoffice.com
 $ docker compose up
 ```
 
