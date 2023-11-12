@@ -7,6 +7,7 @@ cp envoy.yaml "$dir"
 cp README.md "$dir"
 mkdir -p "$dir/scripts"
 cp ./scripts/build_env.sh "$dir/scripts/"
+cp -r docs "$dir"
 
 tar cvfz "$dir".tar.gz "$dir"
 rm -rf "$dir"

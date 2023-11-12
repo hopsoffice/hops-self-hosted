@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 tmp=$(mktemp -d)
-version="0.2"
+version="0.3"
 echo "[I] Downloading hops-self-hosted..."
 curl -sL "https://github.com/hopsoffice/hops-self-hosted/releases/download/$version/releases$version.tar.gz" > "$tmp/releases$version.tar.gz"
 tar xfz "$tmp/releases$version.tar.gz"

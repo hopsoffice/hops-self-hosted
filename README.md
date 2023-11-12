@@ -11,7 +11,7 @@ Docker Compose 환경 설정을 활용하면 5분 안에 Hops를 바로 실행�
 실행해보세요.
 
 ```console
-$ bash <(curl -fsSL https://github.com/hopsoffice/hops-self-hosted/releases/download/0.2/download.sh)
+$ bash <(curl -fsSL https://github.com/hopsoffice/hops-self-hosted/releases/download/0.3/download.sh)
 ```
 
 ## 준비사항
