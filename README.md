@@ -3,16 +3,15 @@
 원하는 환경에 Hops를 설치하여 사용해보세요. 이 저장소에 준비된 스크립트와
 Docker Compose 환경 설정을 활용하면 5분 안에 Hops를 바로 실행해볼 수 있습니다.
 
-![](https://hopsoffice.github.io/misc/public/hops-hero-animated-no-play.png)
+![hops hero image](https://hopsoffice.github.io/misc/public/hops-hero-animated-no-play.png)
 
 ## 한 줄 설치
 
+문서를 읽어볼 시간이 없으시다면 아래 명령어로 누구보다 빠르게 홉스를
+실행해보세요.
+
 ```console
 $ bash <(curl -fsSL https://github.com/hopsoffice/hops-self-hosted/releases/download/0.2/download.sh)
-$ cd hops_self_hosted_0.2
-$ ./install.sh
-$ docker login registry.hopsoffice.com
-$ docker compose up
 ```
 
 ## 준비사항
@@ -36,15 +35,15 @@ Hops를 설치하여 사용하려면 홉스 Docker 이미지 저장소에 접근
 값이며, 다음과 같은 명령어로 간단히 생성할 수 있습니다.
 
 ```console
-$ openssl rand -hex 16 | base64
+$ hexdump -vn16 -e '4/4 "%08X"' /dev/urandom | base64
 ```
 
 ## 설치
 
-저장소를 다운로드받은 후 `install.sh`를 실행하고 설명대로 진행합니다.
+저장소를 다운로드받은 후 `configure.sh`를 실행하고 설명대로 진행합니다.
 
 ```console
-$ ./install.sh
+$ ./configure.sh
 :: Database Configurations
 
 A PostgreSQL database container will be created in docker compose service.
@@ -66,8 +65,13 @@ Configuration finished! Saving configurations...
 설치가 완료된 상태에서 Docker Compose 서비스를 실행하면 Hops가 실행됩니다.
 
 ```console
+$ docker login registry.hopsoffice.com
 $ docker compose up
 ```
 
 이제 브라우저를 열고 설정한 도메인으로 접속하시면 됩니다.  Deploy Domain 값을
 기본값으로 설정하신 경우 http://localhost:3000 주소로 접속해보세요.
+
+## 환경 변수
+
+환경 변수에 대한 설명은 [환경 변수 문서](./docs/env.md)를 참고해주세요.
