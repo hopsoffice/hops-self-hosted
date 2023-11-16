@@ -1,4 +1,4 @@
-# Hops Self Hosted
+# Hops 설치형 서비스
 
 원하는 환경에 Hops를 설치하여 사용해보세요. 이 저장소에 준비된 스크립트와
 Docker Compose 환경 설정을 활용하면 5분 안에 Hops를 바로 실행해볼 수 있습니다.
@@ -72,6 +72,11 @@ $ docker compose up
 이제 브라우저를 열고 설정한 도메인으로 접속하시면 됩니다.  Deploy Domain 값을
 기본값으로 설정하신 경우 http://localhost:3000 주소로 접속해보세요.
 
-## 환경 변수
+## 기타 문서
 
-환경 변수에 대한 설명은 [환경 변수 문서](./docs/env.md)를 참고해주세요.
+- Hops 설치형 서비스에서 사용하는 환경 변수에 대해서 궁금하신가요?
+   - 💁 [환경 변수 문서](./docs/env.md)를 참고해주세요.
+- Hops 설치형 서비스에 도메인을 연결하여 배포하고 싶으신가요?
+   - 💁 [Reverse Proxy로 배포 문서](./docs/reverse-proxy.md)를 참고해주세요.
+- 구글 스프레드시트 데이터 소스를 연동하여 사용하고자 하시나요?
+   - 💁 [Google Cloud 프로젝트 연동 문서](./docs/google-cloud.md)를 참고해주세요.
