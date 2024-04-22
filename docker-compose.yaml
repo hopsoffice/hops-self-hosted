@@ -8,6 +8,8 @@ services:
       POSTGRES_DB: "${HOPS_DB_NAME}"
     volumes:
       - ${HOPS_DB_DATA}:/var/lib/postgresql/data
+  rabbitmq:
+    image: rabbitmq:3.13.1
   envoy:
     image: envoyproxy/envoy-dev:b8f85f43b90d69b9e7303d68d1ea585f723759d0
     volumes:
@@ -22,9 +24,28 @@ services:
     image: registry.hopsoffice.com/hops-api:latest
     links:
       - db
+      - rabbitmq
     depends_on:
       - db
+      - rabbitmq
     environment:
+      CLOUD_GCP_CREDENTIALS_JSON: |
+        {
+          "type": "service_account",
+          "project_id": "",
+          "private_key_id": "",
+          "private_key": "-----BEGIN PRIVATE KEY-----\nMIIBVAIBADANBgkqhkiG9w0BAQEFAASCAT4wggE6AgEAAkEA7M+LPMAp/X2ApOOJ\nV6PAZUA39T8HJ0ojQXdEVjD+6EjnuC0o/nxXopRdrSFbjkP4GiQoyxQ7VeXqHpK3\nfMN0twIDAQABAkBQ8Yv1QvXXWIudUM0EMMu1kCLQaC/IxTWRzfOExpCK0qA6ZFKz\n2a36GYH79519uwTMJD9FBH5TiUWGpSiGmpmRAiEA/3KqtHpaqYYnq9yURYm/AiXA\n8Jo+7D2Mq5U66QN2MHkCIQDtUpDI6/xEQWOKLTy90sdUMzUFx08pln8DaJ3bzTpi\nrwIgWJiikBnnm+hFlhvY6Q1PTCVf95Lnw/PM+C230t06frECIQCpEQjUGkm81lhz\nN4buNBqMgW5kj3h1yCDz7LOIwsu1QQIgKBFKLWrJdhuqIIYGcj8FXL4gbCdOUY+x\nDJLSCivLnDk=\n-----END PRIVATE KEY-----",
+          "client_email": "",
+          "client_id": "",
+          "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+          "token_uri": "https://oauth2.googleapis.com/token",
+          "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+          "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/example%40example.com",
+          "universe_domain": "googleapis.com"
+        }
+      CLOUD_GCP_PROJECT_ID: "example-12345"
+      CLOUD_GCP_PROJECT_NUMBER: "123456"
+      CLOUD_GCP_REGION: "asia-northeast3"
       DB_USERNAME: "${HOPS_DB_USERNAME}"
       DB_PASSWORD: "${HOPS_DB_PASSWORD}"
       DB_HOST: "db:5432"
@@ -35,6 +56,7 @@ services:
       HOPS_ON_PREMISES_INITIAL_USER_EMAIL: "${HOPS_INITIAL_USER_EMAIL}"
       HOPS_ON_PREMISES_USER_PASSWORD_DEFAULT: "${HOPS_DEFAULT_USER_PASSWORD}"
       JWT_SECRET: "${HOPS_SECRET_KEY}"
+      SPRING_RABBITMQ_ADDRESSES: "amqp://guest:guest@rabbitmq//"
   oauth:
     image: registry.hopsoffice.com/hops-oauth:latest
     environment:
