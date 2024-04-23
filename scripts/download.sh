@@ -14,7 +14,7 @@ if [ -d "$install_dir" ]; then
   echo -e "[W] $install_dir already exists, moved to $target"
   mv "$install_dir" "$target"
 fi
-mv "releases$version" "$install_dir"
+mv "releases" "$install_dir"
 
 echo
 echo ":: 라이센스와 Docker Registry 정보를 입력해주세요."
