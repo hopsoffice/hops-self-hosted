@@ -57,6 +57,7 @@ services:
       HOPS_ON_PREMISES_USER_PASSWORD_DEFAULT: "${HOPS_DEFAULT_USER_PASSWORD}"
       JWT_SECRET: "${HOPS_SECRET_KEY}"
       SPRING_RABBITMQ_ADDRESSES: "amqp://guest:guest@rabbitmq//"
+      SPRING_DATASOURCE_USER_URL: "jdbc:postgresql://${HOPS_DB_USERNAME}:${HOPS_DB_PASSWORD}@:db:5432/${HOPS_DB_USERNAME}"
   oauth:
     image: registry.hopsoffice.com/hops-oauth:latest
     environment:
