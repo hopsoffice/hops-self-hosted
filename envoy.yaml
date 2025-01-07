@@ -41,12 +41,25 @@ static_resources:
                   - name: envoy.filters.http.router
                     typed_config:
                       "@type": type.googleapis.com/envoy.extensions.filters.http.router.v3.Router
+                access_log:
+                  - name: hops-api
+                    filter:
+                      not_health_check_filter: {}
+                    typed_config:
+                      "@type": type.googleapis.com/envoy.extensions.access_loggers.stream.v3.StdoutAccessLog
   clusters:
     - name: hops_backend
       connect_timeout: 0.25s
       type: logical_dns
       http2_protocol_options: { }
       lb_policy: round_robin
+      health_checks:
+        - timeout: 1s
+          interval: 1s
+          healthy_threshold: 1
+          unhealthy_threshold: 2
+          no_traffic_interval: 1s
+          grpc_health_check: {}
       load_assignment:
         cluster_name: hops_backend
         endpoints:
@@ -56,4 +69,25 @@ static_resources:
                     socket_address:
                       address: api
                       port_value: 2607
-
+    - name: "hops_backend_api"
+      connect_timeout: 0.25s
+      type: logical_dns
+      lb_policy: round_robin
+      health_checks:
+        - timeout: 1s
+          interval: 1s
+          healthy_threshold: 1
+          unhealthy_threshold: 2
+          no_traffic_interval: 1s
+          http_health_check:
+            host: 127.0.0.1
+            path: /actuator/health
+      load_assignment:
+        cluster_name: "hops_backend_api"
+        endpoints:
+          - lb_endpoints:
+              - endpoint:
+                  address:
+                    socket_address:
+                      address: 127.0.0.1
+                      port_value: 2610
