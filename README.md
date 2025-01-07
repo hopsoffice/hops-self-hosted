@@ -72,6 +72,16 @@ $ docker compose up
 이제 브라우저를 열고 설정한 도메인으로 접속하시면 됩니다.  Deploy Domain 값을
 기본값으로 설정하신 경우 http://localhost:3000 주소로 접속해보세요.
 
+## Envoy
+
+### 액세스 로그
+
+커스터마이징을 하시려면 [Envoy AccessLog 문서][EnvoyAccessLogDocs]를 참고하여
+
+`api-envoy-config-map.yaml` 에 있는 `access_log` 설정을 수정하세요.
+
+[EnvoyAccessLogDocs]: https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/accesslog/v3/accesslog.proto#envoy-v3-api-msg-config-accesslog-v3-accesslog
+
 ## 기타 문서
 
 - Hops 설치형 서비스에서 사용하는 환경 변수에 대해서 궁금하신가요?
