@@ -1,0 +1,94 @@
+{{- $name := print .Release.Name "-" "oauth" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ $name }}
+  name: {{ $name }}
+spec:
+  replicas: {{ .Values.oauth.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ $name }}
+    spec:
+      containers:
+        - image: "{{ .Values.registryUrl }}/{{ .Values.oauth.repo.name }}{{- if .Values.oauth.repo.tag -}}
+          :{{ .Values.oauth.repo.tag }}
+        {{- else if .Values.oauth.repo.hash -}}
+          @sha256:{{ .Values.oauth.repo.hash }}
+        {{- end }}"
+          imagePullPolicy: Always
+          name: {{ $name }}
+          ports:
+            - containerPort: {{ .Values.oauth.port }}
+          env:
+            {{- range .Values.secrets.keys }}
+            - name: {{ . | upper }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $.Values.secrets.name }}
+                  key: {{ . }}
+            {{- end }}
+            {{- range .Values.environments }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+          resources:
+            requests:
+              memory: {{ .Values.memory.requests | default "1Gi" }}
+            limits:
+              memory: {{ .Values.memory.limits | default "1Gi" }}
+          startupProbe:
+            httpGet:
+              path: "/error"
+              port: {{ .Values.oauth.port }}
+            initialDelaySeconds: 10
+            periodSeconds: 1
+            failureThreshold: 25
+          livenessProbe:
+            httpGet:
+              path: "/error"
+              port: {{ .Values.oauth.port }}
+            periodSeconds: 5
+            failureThreshold: 3
+      imagePullSecrets:
+        - name: regcred
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ $name }}
+  name: {{ $name }}
+spec:
+  selector:
+    app.kubernetes.io/name: {{ $name }}
+  ports:
+    - name: {{ $name }}
+      port: 80
+      protocol: TCP
+      targetPort: {{ .Values.oauth.port }}
+  type: NodePort
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $name }}
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+spec:
+  rules:
+    - host: {{ .Values.oauth.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $name }}
+                port:
+                  number: {{ .Values.oauth.port }}
