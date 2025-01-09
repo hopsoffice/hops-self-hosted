@@ -1,0 +1,119 @@
+{{- $name := print .Release.Name "-" "api" }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ $name }}
+  name: {{ $name }}
+spec:
+  replicas: {{ .Values.apiGrpc.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ $name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ $name }}
+    spec:
+      containers:
+        - image: "{{ .Values.registryUrl }}/{{ .Values.apiGrpc.repo.name }}{{- if .Values.apiGrpc.repo.tag -}}
+          :{{ .Values.apiGrpc.repo.tag }}
+        {{- else if .Values.apiGrpc.repo.hash -}}
+          @sha256:{{ .Values.apiGrpc.repo.hash }}
+        {{- end }}"
+          imagePullPolicy: Always
+          name: {{ $name }}
+          ports:
+            - name: grpc
+              containerPort: {{ .Values.apiGrpc.port }}
+            - name: http
+              containerPort: {{ .Values.apiHttp.port }}
+          env:
+            {{- range .Values.secrets.keys }}
+            - name: {{ . | upper }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $.Values.secrets.name }}
+                  key: {{ . }}
+            {{- end }}
+            {{- range .Values.environments }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+            - name: GRPC_SERVER_PORT
+              value: {{ .Values.apiGrpc.port | quote }}
+            - name: SERVER_PORT
+              value: {{ .Values.apiHttp.port | quote }}
+          resources:
+            requests:
+              memory: {{ .Values.memory.requests | default "1Gi" }}
+            limits:
+              memory: {{ .Values.memory.limits | default "1Gi" }}
+          startupProbe:
+            grpc:
+              port: {{ .Values.apiGrpc.port }}
+            initialDelaySeconds: 30
+            periodSeconds: 1
+            failureThreshold: 90
+          livenessProbe:
+            grpc:
+              port: {{ .Values.apiGrpc.port }}
+            periodSeconds: 5
+            failureThreshold: 3
+        - name: envoy
+          image: envoyproxy/envoy:v1.29-latest
+          ports:
+            - name: envoy
+              containerPort: 10000
+          volumeMounts:
+            - name: {{ $name }}-envoy-config
+              mountPath: /etc/envoy/envoy.yaml
+              subPath: envoy.yaml
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 10000
+            initialDelaySeconds: 30
+            periodSeconds: 1
+            failureThreshold: 90
+      imagePullSecrets:
+        - name: regcred
+      volumes:
+        - name: {{ $name }}-envoy-config
+          configMap:
+            name: {{ $name }}-envoy-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: {{ $name }}
+  name: {{ $name }}
+spec:
+  selector:
+    app.kubernetes.io/name: {{ $name }}
+  ports:
+    - name: {{ $name }}-envoy
+      port: 80
+      protocol: TCP
+      targetPort: 10000
+  type: NodePort
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $name }}
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+spec:
+  rules:
+    - host: {{ .Values.apiGrpc.host }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $name }}
+                port:
+                  number: 80

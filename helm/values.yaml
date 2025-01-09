@@ -1,0 +1,72 @@
+registryUrl: "registry.hopsoffice.com"
+
+apiGrpc:
+  replicaCount: 1
+  host: hops-api
+  port: 2607
+  repo:
+    name: "hops-api"
+    hash: null
+    tag: arm64-latest
+
+apiHttp:
+  replicaCount: 1
+  port: 2610
+
+oauth:
+  replicaCount: 1
+  host: hops-oauth
+  port: 2608
+  repo:
+    name: "hops-oauth"
+    hash: null
+    tag: arm64-latest
+
+frontend:
+  replicaCount: 1
+  host: hops-frontend
+  port: 3000
+  repo:
+    name: "hops-frontend"
+    hash: null
+    tag: arm64-latest
+
+secrets:
+  name: "hops-secrets"
+  keys:
+    - cloud_gcp_project_id
+    - cloud_gcp_project_number
+    - cloud_gcp_region
+    - cloud_gcp_credentials_json
+
+    - hops_google_app_client_id
+    - hops_google_app_client_secret
+    - hops_license_id
+    - hops_license_proxy_url
+    - hops_on_premises_initial_user_email
+    - hops_on_premises_user_password_default
+
+    - jwt_secret
+
+    - spring_datasource_username
+    - spring_datasource_password
+    - spring_datasource_url
+
+    - spring_datasource_user_password
+    - spring_datasource_user_url
+    - spring_datasource_user_username
+
+    - spring_rabbitmq_addresses
+
+    - spring_security_oauth2_client_registration_google_client_id
+    - spring_security_oauth2_client_registration_google_client_secret
+    - spring_security_oauth2_client_registration_slack_client_id
+    - spring_security_oauth2_client_registration_slack_client_secret
+
+environments:
+  - name: "JAVA_OPTS"
+    value: "-XX:MaxDirectMemorySize=256M"
+
+memory:
+  requests: "2Gi"
+  limits: "2Gi"

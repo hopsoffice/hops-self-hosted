@@ -1,0 +1,9 @@
+apiVersion: v2
+name: hops
+description: hops를 위한 헬름 차트
+
+type: application
+
+version: 0.1.0
+
+appVersion: "1.16.0"
