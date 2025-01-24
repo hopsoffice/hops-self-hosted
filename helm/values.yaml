@@ -1,39 +1,25 @@
-registryUrl: "registry.hopsoffice.com"
+environment: local
+registryUrl: registry.hopsoffice.com
+secretsName: hops-secrets
+serviceAccountName:
 
-apiGrpc:
+api:
   replicaCount: 1
   host: hops-api
-  port: 2607
   repo:
-    name: "hops-api"
+    name: hops-api
     hash: null
-    tag: arm64-latest
-
-apiHttp:
-  replicaCount: 1
-  port: 2610
-
-oauth:
-  replicaCount: 1
-  host: hops-oauth
-  port: 2608
-  repo:
-    name: "hops-oauth"
-    hash: null
-    tag: arm64-latest
-
-frontend:
-  replicaCount: 1
-  host: hops-frontend
-  port: 3000
-  repo:
-    name: "hops-frontend"
-    hash: null
-    tag: arm64-latest
-
-secrets:
-  name: "hops-secrets"
-  keys:
+    tag: latest
+  environments:
+  nodeSelector: {}
+  grpc:
+    port: 2607
+  http:
+    port: 2610
+  envoy:
+    repo: envoyproxy/envoy:v1.29-latest
+    port: 10000
+  secrets:
     - cloud_gcp_project_id
     - cloud_gcp_project_number
     - cloud_gcp_region
@@ -58,15 +44,33 @@ secrets:
 
     - spring_rabbitmq_addresses
 
+    - spring_ssl_bundle_jks_primary_keystore_location
+    - spring_ssl_bundle_jks_primary_keystore_password
+  volumeMounts:
+
+oauth:
+  replicaCount: 1
+  host: hops-oauth
+  port: 2608
+  repo:
+    name: hops-oauth
+    hash: null
+    tag: latest
+  environments:
+  nodeSelector:
+  secrets:
     - spring_security_oauth2_client_registration_google_client_id
     - spring_security_oauth2_client_registration_google_client_secret
     - spring_security_oauth2_client_registration_slack_client_id
     - spring_security_oauth2_client_registration_slack_client_secret
 
-environments:
-  - name: "JAVA_OPTS"
-    value: "-XX:MaxDirectMemorySize=256M"
-
-memory:
-  requests: "2Gi"
-  limits: "2Gi"
+frontend:
+  replicaCount: 1
+  host: hops-frontend
+  port: 3000
+  repo:
+    name: hops-frontend
+    hash: null
+    tag: latest
+  environments:
+  nodeSelector:

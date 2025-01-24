@@ -1,4 +1,4 @@
-{{- $name := print .Release.Name "-" "oauth" }}
+{{- $name := print .Release.Name "-" $.Values.environment "-" "oauth" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,6 +15,7 @@ spec:
       labels:
         app.kubernetes.io/name: {{ $name }}
     spec:
+      serviceAccountName: {{ .Values.serviceAccountName }}
       containers:
         - image: "{{ .Values.registryUrl }}/{{ .Values.oauth.repo.name }}{{- if .Values.oauth.repo.tag -}}
           :{{ .Values.oauth.repo.tag }}
@@ -26,22 +27,21 @@ spec:
           ports:
             - containerPort: {{ .Values.oauth.port }}
           env:
-            {{- range .Values.secrets.keys }}
+            {{- range .Values.oauth.secrets }}
             - name: {{ . | upper }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ $.Values.secrets.name }}
+                  name: {{ $.Values.secretsName }}
                   key: {{ . }}
             {{- end }}
-            {{- range .Values.environments }}
-            - name: {{ .name }}
-              value: {{ .value | quote }}
+            {{- with .Values.oauth.environments }}
+              {{ toYaml . | nindent 12 }}
             {{- end }}
           resources:
             requests:
-              memory: {{ .Values.memory.requests | default "1Gi" }}
+              memory: {{ .Values.oauth.memory.requests }}
             limits:
-              memory: {{ .Values.memory.limits | default "1Gi" }}
+              memory: {{ .Values.oauth.memory.limits }}
           startupProbe:
             httpGet:
               path: "/error"
@@ -57,6 +57,10 @@ spec:
             failureThreshold: 3
       imagePullSecrets:
         - name: regcred
+      {{- with .Values.oauth.nodeSelector }}
+      nodeSelector:
+        {{ toYaml . | nindent 8 }}
+      {{- end }}
 ---
 apiVersion: v1
 kind: Service
@@ -68,27 +72,7 @@ spec:
   selector:
     app.kubernetes.io/name: {{ $name }}
   ports:
-    - name: {{ $name }}
+    - name: http
       port: 80
       protocol: TCP
       targetPort: {{ .Values.oauth.port }}
-  type: NodePort
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: {{ $name }}
-  annotations:
-    kubernetes.io/ingress.class: "gce"
-spec:
-  rules:
-    - host: {{ .Values.oauth.host }}
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ $name }}
-                port:
-                  number: {{ .Values.oauth.port }}

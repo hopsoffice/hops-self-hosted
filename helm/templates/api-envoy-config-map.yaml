@@ -1,4 +1,4 @@
-{{- $name := print .Release.Name "-" "api" }}
+{{- $name := print .Release.Name "-" $.Values.environment "-" "web" }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -95,7 +95,7 @@ data:
                       address:
                         socket_address:
                           address: 127.0.0.1
-                          port_value: {{ .Values.apiGrpc.port }}
+                          port_value: {{ .Values.api.grpc.port }}
         - name: {{ $name }}-http
           connect_timeout: 0.25s
           type: logical_dns
@@ -117,4 +117,4 @@ data:
                       address:
                         socket_address:
                           address: 127.0.0.1
-                          port_value: {{ .Values.apiHttp.port }}
+                          port_value: {{ .Values.api.http.port }}

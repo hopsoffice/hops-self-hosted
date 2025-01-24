@@ -1,4 +1,4 @@
-{{- $name := print .Release.Name "-" "frontend" }}
+{{- $name := print .Release.Name "-" .Values.environment "-" "frontend" }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,6 +15,7 @@ spec:
       labels:
         app.kubernetes.io/name: {{ $name }}
     spec:
+      serviceAccountName: {{ .Values.serviceAccountName }}
       containers:
         - image: "{{ .Values.registryUrl }}/{{ .Values.frontend.repo.name }}{{- if .Values.frontend.repo.tag -}}
           :{{ .Values.frontend.repo.tag }}
@@ -26,26 +27,18 @@ spec:
           ports:
             - containerPort: {{ .Values.frontend.port }}
           env:
-            {{- range .Values.secrets.keys }}
-            - name: {{ . | upper }}
-              valueFrom:
-                secretKeyRef:
-                  name: {{ $.Values.secrets.name }}
-                  key: {{ . }}
-            {{- end }}
-            {{- range .Values.environments }}
-            - name: {{ .name }}
-              value: {{ .value | quote }}
+            {{- with .Values.frontend.environments }}
+              {{ toYaml . | nindent 12 }}
             {{- end }}
             - name: API_URL
-              value: "//{{ .Values.apiGrpc.host }}"
+              value: "//{{ .Values.api.host }}"
             - name: OAUTH_URL
               value: "//{{ .Values.oauth.host }}"
           resources:
             requests:
-              memory: {{ .Values.memory.requests | default "1Gi" }}
+              memory: {{ .Values.frontend.memory.requests }}
             limits:
-              memory: {{ .Values.memory.limits | default "1Gi" }}
+              memory: {{ .Values.frontend.memory.limits }}
           startupProbe:
             httpGet:
               path: "/"
@@ -61,6 +54,10 @@ spec:
             failureThreshold: 3
       imagePullSecrets:
         - name: regcred
+      {{- with .Values.frontend.nodeSelector }}
+      nodeSelector:
+        {{ toYaml . | nindent 8 }}
+      {{- end }}
 ---
 apiVersion: v1
 kind: Service
@@ -72,28 +69,7 @@ spec:
   selector:
     app.kubernetes.io/name: {{ $name }}
   ports:
-    - name: {{ $name }}
+    - name: http
       port: 80
       protocol: TCP
       targetPort: {{ .Values.frontend.port }}
-  type: NodePort
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: {{ $name }}
-  annotations:
-    kubernetes.io/ingress.class: "gce"
-spec:
-  rules:
-    - host: {{ .Values.frontend.host }}
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ $name }}
-                port:
-                  number: {{ .Values.frontend.port }}
----

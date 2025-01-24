@@ -1,0 +1,45 @@
+environment: local
+registryUrl: registry.hopsoffice.com
+secretsName: hops-secrets
+serviceAccountName:
+
+api:
+  replicaCount: 1
+  memory:
+    requests: 2Gi
+    limits: 2Gi
+  host: hops-api
+  repo:
+    name: hops-api
+    hash: null
+    tag: latest
+  grpc:
+    port: 2607
+  http:
+    port: 2610
+  envoy:
+    port: 10000
+
+oauth:
+  replicaCount: 1
+  memory:
+    requests: 1Gi
+    limits: 1Gi
+  host: hops-api
+  port: 2608
+  repo:
+    name: hops-oauth
+    hash: null
+    tag: latest
+
+frontend:
+  replicaCount: 1
+  memory:
+    requests: 2Gi
+    limits: 2Gi
+  host: hops-frontend
+  port: 3000
+  repo:
+    name: hops-frontend
+    hash: null
+    tag: latest
