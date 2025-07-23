@@ -29,6 +29,9 @@ services:
       - db
       - rabbitmq
     environment:
+      SPRING_CLOUD_AZURE_CREDENTIAL_MANAGED_IDENTITY_ENABLED: false
+      SPRING_CLOUD_AZURE_CREDENTIAL_CLIENT_ID: ""
+      SPRING_CLOUD_AZURE_STORAGE_BLOB_ACCOUNT_NAME: ""
       CLOUD_GCP_CREDENTIALS_JSON: |
         {
           "type": "service_account",
